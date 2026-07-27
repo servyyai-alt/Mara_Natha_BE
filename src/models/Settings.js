@@ -5,7 +5,7 @@ const settingsSchema = new mongoose.Schema(
     singleton: { type: String, default: 'global', unique: true, index: true },
 
     general: {
-      siteName: { type: String, trim: true, default: 'Sandhaikart' },
+      siteName: { type: String, trim: true, default: 'Maranatha' },
       siteDescription: { type: String, trim: true, default: '' },
       freeShippingThreshold: { type: Number, default: 499, min: 0 },
       shippingCharge: { type: Number, default: 49, min: 0 },

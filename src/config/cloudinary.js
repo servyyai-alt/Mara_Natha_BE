@@ -16,14 +16,14 @@ const sanitizeFolder = (value) =>
     .replace(/\/+/g, '/')
     .replace(/^\/|\/$/g, '')
 
-export const createStorage = (defaultFolder = 'sandhaikart', resourceType = 'image') => {
+export const createStorage = (defaultFolder = 'Maranatha', resourceType = 'image') => {
   return new CloudinaryStorage({
     cloudinary,
     params: (req) => {
       const requested = sanitizeFolder(req?.body?.folder)
       const folder = requested || sanitizeFolder(defaultFolder) || 'products'
       return {
-        folder: `sandhaikart/${folder}`,
+        folder: `Maranatha/${folder}`,
         resource_type: resourceType,
         allowed_formats: resourceType === 'video'
           ? ['mp4', 'webm', 'mov']

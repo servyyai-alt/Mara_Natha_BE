@@ -10,7 +10,7 @@ const getMailConfig = () => {
   const pass = process.env.SMTP_PASS || ''
   const from = process.env.SMTP_FROM || process.env.ADMIN_EMAIL || user
   const adminEmail = process.env.ADMIN_EMAIL || ''
-  const appName = process.env.APP_NAME || 'Sandhaikart'
+  const appName = process.env.APP_NAME || 'Maranatha'
   return { host, port, secure, user, pass, from, adminEmail, appName }
 }
 
@@ -40,7 +40,7 @@ export const sendReturnRequestEmail = async ({ returnRequest, order, user }) => 
       <p>We have received your return request for Order <strong>#${orderIdShort}</strong>.</p>
       <p><strong>Status:</strong> Return requested</p>
       <p>Our team will process your return shortly.</p>
-      <p>Thanks,<br/>Sandhaikart</p>
+      <p>Thanks,<br/>Maranatha</p>
     </div>
   `
   try {
@@ -65,7 +65,7 @@ export const sendReturnApprovedEmail = async ({ returnRequest, order, user }) =>
       <p>Your return request for Order <strong>#${orderIdShort}</strong> has been approved.</p>
       <p><strong>Status:</strong> Return approved / QC Passed</p>
       ${awb ? `<p><strong>AWB (Tracking Number):</strong> ${awb}</p>` : ''}
-      <p>Thanks,<br/>Sandhaikart</p>
+      <p>Thanks,<br/>Maranatha</p>
     </div>
   `
   try {
@@ -89,7 +89,7 @@ export const sendReturnRejectedEmail = async ({ returnRequest, order, user }) =>
       <p>Your return request for Order <strong>#${orderIdShort}</strong> has been updated.</p>
       <p><strong>Status:</strong> QC Failed / Rejected</p>
       <p>Please contact our support for further details.</p>
-      <p>Thanks,<br/>Sandhaikart</p>
+      <p>Thanks,<br/>Maranatha</p>
     </div>
   `
   try {
@@ -105,7 +105,7 @@ export const sendReturnRejectedEmail = async ({ returnRequest, order, user }) =>
 export const sendAdminReturnNotification = async ({ returnRequest, order, user }) => {
   const cfg = getMailConfig()
   if (!isMailConfigured(cfg)) return
-  const adminRecipient = (!cfg.adminEmail || cfg.adminEmail.endsWith('@sandhaikart.com')) ? cfg.user : cfg.adminEmail
+  const adminRecipient = (!cfg.adminEmail || cfg.adminEmail.endsWith('@Maranatha.com')) ? cfg.user : cfg.adminEmail
   if (!adminRecipient) return
 
   const orderIdShort = order?._id?.toString()?.slice(-8)?.toUpperCase()
@@ -156,7 +156,7 @@ export const sendReturnStatusEmails = async ({ returnRequest, order, user }) => 
             <p><strong>Status:</strong> ${status}</p>
             ${awb ? `<p><strong>AWB:</strong> ${awb}</p>` : ''}
             <p><strong>Updated at:</strong> ${fmt(new Date())}</p>
-            <p>Thanks,<br/>Sandhaikart</p>
+            <p>Thanks,<br/>Maranatha</p>
           </div>
         `
         const subject = status === 'pickup_scheduled' ? 'Return pickup scheduled'
@@ -196,7 +196,7 @@ export const sendRefundStatusEmails = async ({ returnRequest, order, user }) => 
       <p><strong>Refund status:</strong> ${refund.status}</p>
       <p><strong>Refund amount:</strong> ₹${((Number(refund.amount) || 0) / 100).toLocaleString('en-IN')}</p>
       ${refund.refundId ? `<p><strong>Refund ID:</strong> ${refund.refundId}</p>` : ''}
-      <p>Thanks,<br/>Sandhaikart</p>
+      <p>Thanks,<br/>Maranatha</p>
     </div>
   `
   try {

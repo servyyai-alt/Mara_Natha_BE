@@ -53,8 +53,8 @@ app.use(cors({
     process.env.FRONTEND_URL || 'http://localhost:5173',
     'http://localhost:5173',
     'http://localhost:5174',
-    'https://sandhaikart.com',
-    'https://www.sandhaikart.com',
+    'https://Maranatha.com',
+    'https://www.Maranatha.com',
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -108,7 +108,7 @@ app.use('/api/checkouts', apiLimiter, checkoutRoutes)
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'Sandhaikart API is running',
+    message: 'Maranatha API is running',
     version: '1.0.0',
     environment: process.env.NODE_ENV,
     timestamp: new Date().toISOString(),
@@ -144,7 +144,7 @@ const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
   console.log(`
   ╔═══════════════════════════════════════╗
-  ║      🛒  Sandhaikart API Server       ║
+  ║      🛒  Maranatha API Server       ║
   ║                                       ║
   ║  Port    : ${PORT}                        ║
   ║  Mode    : ${(process.env.NODE_ENV || 'development').padEnd(12)}           ║

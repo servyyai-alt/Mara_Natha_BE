@@ -1,11 +1,11 @@
 import 'dotenv/config'
 import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
+
 import User from '../models/User.js'
 import Product from '../models/Product.js'
 import Category from '../models/Category.js'
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/sandhaikart'
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/Maranatha'
 
 const slugify = (value) =>
   String(value || '')
@@ -123,25 +123,23 @@ const seed = async () => {
     ])
     console.log('🗑️  Cleared existing data')
 
-    // Create admin user
-    const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'Admin@123', 12)
+    // Create admin user (pass plaintext — the pre('save') hook hashes it)
     const admin = await User.create({
       name: 'Admin',
-      email: process.env.ADMIN_EMAIL || 'admin@sandhaikart.com',
-      password: adminPassword,
+      email: process.env.ADMIN_EMAIL || 'admin@maranatha.com',
+      password: process.env.ADMIN_PASSWORD || 'Admin@123',
       role: 'admin',
     })
     console.log(`👤 Admin created: ${admin.email}`)
 
     // Create sample user
-    const userPassword = await bcrypt.hash('User@123', 12)
     await User.create({
       name: 'Test User',
-      email: 'user@sandhaikart.com',
-      password: userPassword,
+      email: 'user@maranatha.com',
+      password: 'User@123',
       role: 'user',
     })
-    console.log('👤 Sample user created: user@sandhaikart.com')
+    console.log('👤 Sample user created: user@maranatha.com')
 
     // Create categories
     const createdCategories = await Category.insertMany(categories)
@@ -158,10 +156,10 @@ const seed = async () => {
 
     console.log('\n🎉 Database seeded successfully!\n')
     console.log('Admin credentials:')
-    console.log(`  Email   : ${process.env.ADMIN_EMAIL || 'admin@sandhaikart.com'}`)
+    console.log(`  Email   : ${process.env.ADMIN_EMAIL || 'admin@maranatha.com'}`)
     console.log(`  Password: ${process.env.ADMIN_PASSWORD || 'Admin@123'}`)
     console.log('\nSample user:')
-    console.log('  Email   : user@sandhaikart.com')
+    console.log('  Email   : user@maranatha.com')
     console.log('  Password: User@123')
 
     process.exit(0)
