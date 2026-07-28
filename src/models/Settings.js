@@ -27,10 +27,6 @@ const settingsSchema = new mongoose.Schema(
     },
 
     homepage: {
-      heroVideo: {
-        url: { type: String, trim: true, default: '' },
-        publicId: { type: String, trim: true, default: '' },
-      },
       heroImage: {
         url: { type: String, trim: true, default: '' },
         publicId: { type: String, trim: true, default: '' },

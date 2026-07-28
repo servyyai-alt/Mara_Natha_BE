@@ -40,8 +40,6 @@ const buildUpdateFromFlatPayload = (payload = {}) => {
   }
   if (payload.couponCode !== undefined) update['marketing.couponCode'] = String(payload.couponCode || '').trim()
 
-  if (payload.heroVideoUrl !== undefined) update['homepage.heroVideo.url'] = String(payload.heroVideoUrl || '').trim()
-  if (payload.heroVideoPublicId !== undefined) update['homepage.heroVideo.publicId'] = String(payload.heroVideoPublicId || '').trim()
   if (payload.heroImageUrl !== undefined) update['homepage.heroImage.url'] = String(payload.heroImageUrl || '').trim()
   if (payload.heroImagePublicId !== undefined) update['homepage.heroImage.publicId'] = String(payload.heroImagePublicId || '').trim()
   if (payload.heroImages !== undefined) {
