@@ -65,6 +65,7 @@ const returnRequestSchema = new mongoose.Schema(
       awb: String,
       courierName: String,
       pickupScheduledAt: Date,
+      error: String,
     },
     refund: {
       paymentId: String,

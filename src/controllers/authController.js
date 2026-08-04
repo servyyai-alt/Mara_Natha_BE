@@ -5,11 +5,11 @@ import { sendMail } from '../utils/sendMail.js'
 // @desc    Register user
 // @route   POST /api/auth/register
 export const register = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body
+  const { name, phone, email, password } = req.body
 
-  if (!name || !email || !password) {
+  if (!name || !phone || !email || !password) {
     res.status(400)
-    throw new Error('Please provide name, email, and password')
+    throw new Error('Please provide name, phone, email, and password')
   }
 
   const existingUser = await User.findOne({ email })
@@ -18,7 +18,7 @@ export const register = asyncHandler(async (req, res) => {
     throw new Error('Email already registered')
   }
 
-  const user = await User.create({ name, email, password })
+  const user = await User.create({ name, phone, email, password })
   const token = user.getJWT()
 
   res.status(201).json({

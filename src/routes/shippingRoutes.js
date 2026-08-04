@@ -7,6 +7,6 @@ const router = express.Router()
 router.post('/create/:orderId', protect, adminOnly, createShipping)
 router.get('/test-auth', protect, adminOnly, testAuth)
 router.get('/track/:awb', protect, trackShipment)
-router.post('/serviceability', protect, checkServiceability)
+router.post('/serviceability', checkServiceability)
 
 export default router

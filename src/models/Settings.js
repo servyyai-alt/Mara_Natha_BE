@@ -40,35 +40,6 @@ const settingsSchema = new mongoose.Schema(
         ],
         default: [],
       },
-      heroCards: {
-        type: [
-          {
-            kind: { type: String, enum: ['image', 'video'], default: 'image' },
-            url: { type: String, trim: true, default: '' },
-            publicId: { type: String, trim: true, default: '' },
-            title: { type: String, trim: true, default: '' },
-          },
-        ],
-        default: [],
-      },
-      latestArrivals: {
-        title: { type: String, trim: true, default: 'Latest Arrivals' },
-        description: { type: String, trim: true, default: 'Explore our newest collection' },
-      },
-      latestArrivalBanners: {
-        type: [
-          {
-            title: { type: String, trim: true, default: '' },
-            description: { type: String, trim: true, default: '' },
-            image: {
-              url: { type: String, trim: true, default: '' },
-              publicId: { type: String, trim: true, default: '' },
-            },
-            to: { type: String, trim: true, default: '/products' },
-          },
-        ],
-        default: [],
-      },
     },
 
     integrations: {

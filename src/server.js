@@ -64,13 +64,13 @@ app.use(cors({
 // ─── Rate Limiting ────────────────────────────────────────
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
+  max: 10000,
   message: { success: false, message: 'Too many requests, please try again later.' },
 })
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: 20000,
   message: { success: false, message: 'Too many requests.' },
 })
 

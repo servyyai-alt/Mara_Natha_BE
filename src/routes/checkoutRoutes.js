@@ -4,9 +4,7 @@ import { createPendingCheckout, linkCheckoutOrder } from '../controllers/checkou
 
 const router = express.Router()
 
-router.use(protect)
-
 router.post('/abandoned', createPendingCheckout)
-router.put('/abandoned/:id/link', linkCheckoutOrder)
+router.put('/abandoned/:id/link', protect, linkCheckoutOrder)
 
 export default router

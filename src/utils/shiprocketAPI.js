@@ -5,6 +5,7 @@ import User from '../models/User.js'
 const SHIPROCKET_BASE = 'https://apiv2.shiprocket.in/v1/external'
 
 let tokenCache = { token: null, expiresAt: 0, cacheKey: null }
+const serviceabilityCache = new Map()
 
 const normalizeIndianPhone10 = (value) => {
   const digits = String(value || '').replace(/\D/g, '')
@@ -131,6 +132,14 @@ export const getServiceability = async ({ pickupPincode, deliveryPincode, weight
 
   const envPincode = (process.env.RETURN_WAREHOUSE_PINCODE || '').replace(/\s+/g, '')
   const finalPickupPincode = (pickupPincode || '').replace(/\s+/g, '') || envPincode
+  const finalDeliveryPincode = normalizePincode(deliveryPincode)
+  const finalWeight = Number(weight || 0.5)
+  const cacheKey = `${finalPickupPincode}::${finalDeliveryPincode}::${finalWeight}`
+  const cached = serviceabilityCache.get(cacheKey)
+
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data
+  }
 
   if (!finalPickupPincode) {
     const err = new Error('Pickup pincode is required for serviceability check')
@@ -138,15 +147,34 @@ export const getServiceability = async ({ pickupPincode, deliveryPincode, weight
     throw err
   }
 
-  const res = await client.get('/courier/serviceability', {
-    params: {
-      pickup_postcode: finalPickupPincode,
-      delivery_postcode: deliveryPincode,
-      weight,
-      cod: 0,
-    },
-  })
-  return res.data
+  try {
+    const res = await client.get('/courier/serviceability', {
+      params: {
+        pickup_postcode: finalPickupPincode,
+        delivery_postcode: finalDeliveryPincode,
+        weight: finalWeight,
+        cod: 1,
+      },
+    })
+    serviceabilityCache.set(cacheKey, {
+      data: res.data,
+      expiresAt: Date.now() + 10 * 60 * 1000,
+    })
+    return res.data
+  } catch (err) {
+    if (cached?.data) return cached.data
+
+    const status = err.response?.status || 500
+    const apiMessage = err.response?.data?.message || err.response?.data?.error || err.message
+    const e = new Error(
+      status === 429
+        ? 'Shiprocket serviceability is rate-limited right now. Please try again in a moment.'
+        : `Shiprocket serviceability failed: ${apiMessage}`
+    )
+    e.statusCode = status
+    e.details = err.response?.data
+    throw e
+  }
 }
 
 export const cancelShiprocketOrder = async (ids) => {

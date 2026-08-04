@@ -160,10 +160,9 @@ export const createReturnRequest = asyncHandler(async (req, res) => {
     audit: [{ by: req.user._id, action: 'requested', meta: { reason: String(reason || '') } }],
   })
 
-  // Shiprocket: serviceability + create return (best-effort but will fail request if not serviceable)
+  // Shiprocket: serviceability + create return are best-effort.
   try {
     if (!process.env.RETURN_WAREHOUSE_PINCODE) {
-      res.status(500)
       throw new Error('Return warehouse pincode not configured (RETURN_WAREHOUSE_PINCODE)')
     }
     const serviceability = await getReturnServiceability({
@@ -201,11 +200,17 @@ export const createReturnRequest = asyncHandler(async (req, res) => {
     await rr.save()
 
   } catch (err) {
-    // Rollback created ReturnRequest to prevent database inconsistency and 409 duplicate key conflict on subsequent attempts
-    await ReturnRequest.deleteOne({ _id: rr._id })
     const details = err.details ? ` Details: ${JSON.stringify(err.details)}` : ''
-    res.status(err.statusCode || 500)
-    throw new Error(`${err.message}${details}`)
+    rr.shiprocket = {
+      ...(rr.shiprocket || {}),
+      error: `${err.message}${details}`.slice(0, 1000),
+    }
+    rr.audit.push({
+      by: req.user._id,
+      action: 'shiprocket_return_failed',
+      meta: { message: err.message, statusCode: err.statusCode || 500 },
+    })
+    await rr.save()
   }
 
   // Update order summary
@@ -226,7 +231,13 @@ export const createReturnRequest = asyncHandler(async (req, res) => {
     console.error('Return email send failed:', err.message)
   }
 
-  res.status(201).json({ success: true, returnRequest: rr })
+  res.status(201).json({
+    success: true,
+    returnRequest: rr,
+    message: rr.shiprocket?.error
+      ? 'Return request submitted, but pickup scheduling is pending.'
+      : 'Return request submitted successfully.',
+  })
 })
 
 // @desc    Get my return requests
